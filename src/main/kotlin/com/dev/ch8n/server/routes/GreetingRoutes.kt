@@ -10,24 +10,33 @@ const val GET_PARAM_NAME = "name"
 
 fun Route.greetingRoutes(greetingRepository: GreetingRepository) {
     route("/hello") {
-        get {
-            call.respondText(status = HttpStatusCode.OK) {
-                greetingRepository.getGreeting()
+        greet(greetingRepository)
+        greetWithNameParam(greetingRepository)
+    }
+}
+
+private inline fun Route.greetWithNameParam(greetingRepository: GreetingRepository) {
+    get("{$GET_PARAM_NAME}") {
+        val name = call.parameters.get(GET_PARAM_NAME)
+
+        if (name.isNullOrEmpty()) {
+            call.respondText(status = HttpStatusCode.BadRequest) {
+                "Tell me your name Stranger!"
             }
+            return@get
         }
-        get("{$GET_PARAM_NAME}") {
-            val name = call.parameters.get(GET_PARAM_NAME)
 
-            if (name.isNullOrEmpty()) {
-                call.respondText(status = HttpStatusCode.BadRequest) {
-                    "Missing name!"
-                }
-                return@get
-            }
-
-            call.respondText(status = HttpStatusCode.OK) {
-                greetingRepository.getGreeting(name)
-            }
+        call.respondText(status = HttpStatusCode.OK) {
+            greetingRepository.getGreeting(name)
         }
     }
 }
+
+private inline fun Route.greet(greetingRepository: GreetingRepository) {
+    get {
+        call.respondText(status = HttpStatusCode.OK) {
+            greetingRepository.getGreeting()
+        }
+    }
+}
+
