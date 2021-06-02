@@ -7,7 +7,7 @@ This repository is the code corresponding to the hands-on lab [Creating HTTP API
 # TODOs
 
 ### Ktor task
-- [ ] create api for testing server : hello world api 
+- [x] create api for testing server : hello world api 
 - [ ] create data classes for google release xml/json
 - [ ] get rss feeds from android devs
 - [ ] convert rss to json
@@ -15,6 +15,13 @@ This repository is the code corresponding to the hands-on lab [Creating HTTP API
 - [ ] serve inMemory json from the hello world api
 - [ ] integrate mongo db server
 - [ ] create get route which trigger mongo db api call and return json
+
+# Framework used
+- [Ktor](https://ktor.io/docs/creating-http-apis.html#learning-more-about-ktor) Backend framework for restful APIs build using Kotlin
+
+# Resources
+- [Rss Feed Google releases](https://developer.android.com/feeds/androidx-release-notes.xml) Android release feefs
+
 
 
 
