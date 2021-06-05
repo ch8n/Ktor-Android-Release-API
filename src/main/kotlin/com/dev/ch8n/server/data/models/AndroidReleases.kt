@@ -9,7 +9,6 @@ data class AndroidRelease(
 
 @Serializable
 data class ReleaseNote(
-    val date: String,
     val releaseItems: List<ReleaseItem>,
     val id: String,
     val updatedAt: String,

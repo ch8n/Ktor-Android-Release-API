@@ -73,5 +73,14 @@ data class LinkX(
 )
 
 fun AndroidReleaseDto.toAndroidRelease(): AndroidRelease {
-    return TODO()
+    val releaseNotes = mutableListOf<ReleaseNote>
+    return this.feed.entry.forEach { entry ->
+        releaseNotes.add(
+            ReleaseNote(
+                updatedAt = entry.updated,
+                authorName = this.feed.author,
+                id = entry.id
+            )
+        )
+    }
 }
