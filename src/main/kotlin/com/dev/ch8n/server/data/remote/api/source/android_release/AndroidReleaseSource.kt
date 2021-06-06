@@ -31,12 +31,13 @@ class AndroidReleaseSource(
 
     override suspend fun getAndroidReleaseRss(): String {
         val response = httpClient.use { client ->
+            println("============ api called =============")
             client.request<HttpResponse>(Url.GET_ANDROID_RELEASE_RSS) {
                 method = HttpMethod.Get
             }
         }
         val statusCode = response.status.value
-        println("Status code : $statusCode")
+        println("============ Status code : $statusCode =============")
         val result = when {
             statusCode in 300..399 -> throw Exception(response.readText())
             statusCode in 400..499 -> throw Exception(response.readText())
@@ -49,8 +50,12 @@ class AndroidReleaseSource(
 
     override suspend fun getAndroidRelease(): AndroidReleaseDto {
         val rssString = getAndroidReleaseRss()
-       // todo fix direct xml to pojo
+        println("============ RSS COMPLETED =============")
+        println(rssString)
+        // todo fix direct xml to pojo
         val jsonString = XML.toJSONObject(rssString).toString()
+        println("============ RSS->JSON COMPLETED =============")
+        println(jsonString)
         val androidReleaseDto = Json.decodeFromString<AndroidReleaseDto>(jsonString)
         androidReleaseDto.feed?.entry?.onEach {
             val contentXml = it.content?.cdata ?: ""
@@ -61,6 +66,8 @@ class AndroidReleaseSource(
             it.content?.contentV1 = releaseContentDtoV1
             it.content?.contentV2 = releaseContentDtoV2
         }
+        println("============ JSON->DATA COMPLETED =============")
+        println(androidReleaseDto.feed?.entry?.size)
         return androidReleaseDto
     }
 

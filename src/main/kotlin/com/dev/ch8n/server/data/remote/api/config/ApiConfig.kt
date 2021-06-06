@@ -21,7 +21,7 @@ object ApiConfig {
 private inline fun HttpClientConfig<CIOEngineConfig>.configHttpLogging() {
     install(Logging) {
         logger = Logger.DEFAULT
-        level = LogLevel.BODY
+        level = LogLevel.HEADERS
     }
 }
 
