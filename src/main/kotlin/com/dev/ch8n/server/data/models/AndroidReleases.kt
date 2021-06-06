@@ -11,8 +11,7 @@ data class AndroidRelease(
 data class ReleaseNote(
     val releaseItems: List<ReleaseItem>,
     val id: String,
-    val updatedAt: String,
-    val authorName: String
+    val updatedAt: String
 )
 
 @Serializable

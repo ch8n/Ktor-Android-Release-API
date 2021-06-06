@@ -1,8 +1,11 @@
-package com.dev.ch8n.server.data.repositories.services.release_rss
+package com.dev.ch8n.server.data.remote.api.source.android_release
 
 import com.dev.ch8n.server.data.models.AndroidRelease
+import com.dev.ch8n.server.data.models.ReleaseItem
+import com.dev.ch8n.server.data.models.ReleaseNote
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class AndroidReleaseDto(
@@ -18,11 +21,16 @@ data class Author(
 
 @Serializable
 data class Content(
-    @SerialName("__cdata")
+    @SerialName("content")
     val cdata: String? = null,
-    @SerialName("_type")
-    val type: String? = null
-)
+    @SerialName("type")
+    val type: String? = null,
+) {
+    @Transient
+    var contentV1: ReleaseContentDto? = null
+    @Transient
+    var contentV2: ReleaseContentDtoV2? = null
+}
 
 @Serializable
 data class Entry(
@@ -52,35 +60,63 @@ data class Feed(
     val title: String? = null,
     @SerialName("updated")
     val updated: String? = null,
-    @SerialName("_xmlns")
+    @SerialName("xmlns")
     val xmlns: String? = null
 )
 
 @Serializable
 data class Link(
-    @SerialName("_href")
+    @SerialName("href")
     val href: String? = null,
-    @SerialName("_rel")
+    @SerialName("rel")
     val rel: String? = null
 )
 
 @Serializable
 data class LinkX(
-    @SerialName("_href")
+    @SerialName("href")
     val href: String? = null,
-    @SerialName("_rel")
+    @SerialName("rel")
     val rel: String? = null
 )
 
-fun AndroidReleaseDto.toAndroidRelease(): AndroidRelease {
-    val releaseNotes = mutableListOf<ReleaseNote>
-    return this.feed.entry.forEach { entry ->
-        releaseNotes.add(
-            ReleaseNote(
-                updatedAt = entry.updated,
-                authorName = this.feed.author,
-                id = entry.id
-            )
-        )
-    }
-}
+@Serializable
+data class ReleaseContentDto(
+    @SerialName("ul")
+    val ul: Ul? = null
+)
+
+@Serializable
+data class Ul(
+    @SerialName("li")
+    val li: List<Li>? = null
+)
+
+
+@Serializable
+data class ReleaseContentDtoV2(
+    @SerialName("ul")
+    val ul: UlV2? = null
+)
+
+@Serializable
+data class UlV2(
+    @SerialName("li")
+    val li: Li? = null
+)
+
+
+@Serializable
+data class Li(
+    @SerialName("a")
+    val a: A? = null
+)
+
+@Serializable
+data class A(
+    @SerialName("content")
+    val content: String? = null,
+    @SerialName("href")
+    val href: String? = null
+)
+
