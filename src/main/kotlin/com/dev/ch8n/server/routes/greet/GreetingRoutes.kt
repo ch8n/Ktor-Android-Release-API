@@ -1,4 +1,4 @@
-package com.dev.ch8n.server.routes
+package com.dev.ch8n.server.routes.greet
 
 import com.dev.ch8n.server.data.repositories.GreetingRepository
 import io.ktor.application.*

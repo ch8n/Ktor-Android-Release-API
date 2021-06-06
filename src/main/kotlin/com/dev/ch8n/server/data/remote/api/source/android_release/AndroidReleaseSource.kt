@@ -13,14 +13,14 @@ import org.json.XML
 
 interface AndroidReleaseService {
     suspend fun getAndroidReleaseRss(): String
-    suspend fun getAndroidReleaseJson(): AndroidReleaseDto
+    suspend fun getAndroidRelease(): AndroidReleaseDto
 }
 
 // instant test
 fun main() {
     val rss = AndroidReleaseSource(ApiConfig.httpClient)
     runBlocking {
-        val result = rss.getAndroidReleaseJson().toAndroidRelease()
+        val result = rss.getAndroidRelease().toAndroidRelease()
         println(result)
     }
 }
@@ -47,7 +47,7 @@ class AndroidReleaseSource(
         return result
     }
 
-    override suspend fun getAndroidReleaseJson(): AndroidReleaseDto {
+    override suspend fun getAndroidRelease(): AndroidReleaseDto {
         val rssString = getAndroidReleaseRss()
        // todo fix direct xml to pojo
         val jsonString = XML.toJSONObject(rssString).toString()
