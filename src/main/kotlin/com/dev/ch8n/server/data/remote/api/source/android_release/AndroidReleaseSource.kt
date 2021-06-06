@@ -1,4 +1,4 @@
-package com.dev.ch8n.server.data.remote.api.source.rss
+package com.dev.ch8n.server.data.remote.api.source.android_release
 
 import com.dev.ch8n.server.data.remote.api.config.ApiConfig
 import com.dev.ch8n.server.data.remote.api.config.ApiConfig.Url
@@ -7,23 +7,24 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
+import org.json.XML
 
-interface AndroidRssService {
+interface AndroidReleaseService {
     suspend fun getAndroidReleaseRss(): String
+    suspend fun getAndroidReleaseJson(): String
 }
 
 // instant test
 fun main(){
-    val rss = AndroidRssSource(ApiConfig.httpClient)
+    val rss = AndroidReleaseSource(ApiConfig.httpClient)
     runBlocking {
-        val result = rss.getAndroidReleaseRss()
-        println(result)
+        val result = rss.getAndroidReleaseJson()
     }
 }
 
-class AndroidRssSource(
+class AndroidReleaseSource(
     private val httpClient: HttpClient
-) : AndroidRssService {
+) : AndroidReleaseService {
 
     override suspend fun getAndroidReleaseRss(): String {
         val response = httpClient.use { client ->
@@ -41,5 +42,11 @@ class AndroidRssSource(
             else -> throw Exception(response.readText())
         }
         return result
+    }
+
+    override suspend fun getAndroidReleaseJson(): String {
+        val rssString = getAndroidReleaseRss()
+        val jsonString = XML.toJSONObject(rssString)
+        return jsonString.toString()
     }
 }
