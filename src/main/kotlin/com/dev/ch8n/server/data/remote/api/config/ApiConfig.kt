@@ -6,6 +6,7 @@ import io.ktor.client.features.logging.*
 
 
 object ApiConfig {
+
     val httpClient by lazy {
         HttpClient(CIO) {
             configHttpLogging()
@@ -21,7 +22,7 @@ object ApiConfig {
 private inline fun HttpClientConfig<CIOEngineConfig>.configHttpLogging() {
     install(Logging) {
         logger = Logger.DEFAULT
-        level = LogLevel.HEADERS
+        level = LogLevel.BODY
     }
 }
 

@@ -70,5 +70,4 @@ class AndroidReleaseSource(
         println(androidReleaseDto.feed?.entry?.size)
         return androidReleaseDto
     }
-
 }
