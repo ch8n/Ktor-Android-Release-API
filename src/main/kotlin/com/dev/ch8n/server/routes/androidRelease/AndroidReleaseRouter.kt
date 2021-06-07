@@ -19,12 +19,10 @@ fun Route.androidReleaseRoutes(releaseRepository: AndroidReleaseRepository) {
 
 private inline fun Route.getRelease(releaseRepository: AndroidReleaseRepository) {
     get {
-
         val resultDeferred = GlobalScope.async {
-            Result.build { releaseRepository.getAndroidRelease() }
+            releaseRepository.getAndroidRelease()
         }
-
-        val result = resultDeferred.await()
+        val result = Result.build { resultDeferred.await() }
         when (result) {
             is Result.Error -> {
                 println("============ call error =============")
@@ -34,12 +32,9 @@ private inline fun Route.getRelease(releaseRepository: AndroidReleaseRepository)
             }
             is Result.Success -> {
                 println("============ call success =============")
-                call.respond(status = HttpStatusCode.OK){
-                    result.value
-                }
+                call.respond(status = HttpStatusCode.OK,message = result.value)
             }
         }
-
     }
 }
 

@@ -12,5 +12,6 @@ class AndroidReleaseRepository(
     suspend fun getAndroidRelease(): AndroidRelease = withContext(Dispatchers.IO) {
         val releaseDto = releaseService.getAndroidRelease()
         releaseDto.toAndroidRelease()
+        throw IllegalAccessError("pagal pn")
     }
 }
