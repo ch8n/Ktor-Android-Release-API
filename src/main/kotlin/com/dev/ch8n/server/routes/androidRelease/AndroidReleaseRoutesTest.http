@@ -1,0 +1,4 @@
+### open in vscode + httpClient plugin
+
+GET http://127.0.0.1:8080/android
+Accept: application/json

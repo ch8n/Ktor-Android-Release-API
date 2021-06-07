@@ -15,6 +15,9 @@ This repository is the code corresponding to the hands-on lab [Creating HTTP API
 - [ ] serve inMemory json from the hello world api
 - [ ] integrate mongo db server
 - [ ] create get route which trigger mongo db api call and return json
+- logging for server
+- debugging mode?
+- ktlint and testing?
 
 # Framework used
 - [Ktor](https://ktor.io/docs/creating-http-apis.html#learning-more-about-ktor) Backend framework for restful APIs build using Kotlin
