@@ -29,6 +29,9 @@ dependencies {
     // xml mapper
     implementation("org.json:json:20190722")
 
+    // kmongo
+    implementation("org.litote.kmongo:kmongo-coroutine-serialization:4.2.7")
+
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
 }
 

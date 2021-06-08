@@ -9,7 +9,6 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 
 fun Route.androidReleaseRoutes(releaseRepository: AndroidReleaseRepository) {
     route("/android") {
@@ -20,7 +19,7 @@ fun Route.androidReleaseRoutes(releaseRepository: AndroidReleaseRepository) {
 private inline fun Route.getRelease(releaseRepository: AndroidReleaseRepository) {
     get {
         val resultDeferred = GlobalScope.async {
-            releaseRepository.getAndroidRelease()
+            releaseRepository.getAndroidLocalRelease()
         }
         val result = Result.build { resultDeferred.await() }
         when (result) {
@@ -32,7 +31,11 @@ private inline fun Route.getRelease(releaseRepository: AndroidReleaseRepository)
             }
             is Result.Success -> {
                 println("============ call success =============")
-                call.respond(status = HttpStatusCode.OK,message = result.value)
+                if (result.value != null) {
+                    call.respond(status = HttpStatusCode.OK, message = result.value)
+                } else {
+                    call.respond(status = HttpStatusCode.InternalServerError, message = "")
+                }
             }
         }
     }
