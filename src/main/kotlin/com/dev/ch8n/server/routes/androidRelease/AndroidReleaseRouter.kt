@@ -20,7 +20,6 @@ private inline fun Route.getRelease(releaseRepository: AndroidReleaseRepository)
     get("/{hashKey}") {
         val hashKeyParam = call.parameters.get("hashKey").toString()
         val resultDeferred = GlobalScope.async {
-
             releaseRepository.getAndroidLocalRelease(hashKeyParam)
         }
         val result = Result.build { resultDeferred.await() }
