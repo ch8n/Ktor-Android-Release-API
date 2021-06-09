@@ -17,11 +17,11 @@ class AndroidReleaseRepository(
         releaseDto.toAndroidRelease()
     }
 
-    suspend fun getAndroidLocalRelease(): AndroidRelease? = withContext(Dispatchers.IO) {
-        releaseLocalService.getAndroidRelease()
+    suspend fun getAndroidLocalRelease(keyHash: String): AndroidRelease? = withContext(Dispatchers.IO) {
+        releaseLocalService.getAndroidRelease(keyHash)
     }
 
-    suspend fun saveAndroidRelease(remoteAndroidRelease: AndroidRelease) = withContext(Dispatchers.IO){
+    suspend fun saveAndroidRelease(remoteAndroidRelease: AndroidRelease): String = withContext(Dispatchers.IO) {
         releaseLocalService.saveAndroidRelease(remoteAndroidRelease)
     }
 }

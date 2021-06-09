@@ -1,13 +1,18 @@
 package com.dev.ch8n.server.data.local.database.config
 
-import org.litote.kmongo.coroutine.coroutine
-import org.litote.kmongo.reactivestreams.KMongo
+import com.dev.ch8n.server.data.local.database.sources.DBClient
+import com.dev.ch8n.server.data.models.AndroidRelease
+import org.kodein.db.OpenPolicy
+import org.kodein.db.impl.open
+import org.kodein.db.orm.kotlinx.KotlinxSerializer
 
 object DBConfig {
-    const val DB_NAME_ANDROID_RELEASE = "ch8n_server_android_release"
+    private const val DatabasePath = "./"
 
     val dbClient by lazy {
-        KMongo.createClient().coroutine
+        DBClient.open(DatabasePath, OpenPolicy.Create, KotlinxSerializer {
+            +AndroidRelease.serializer()
+        })
     }
 
 }

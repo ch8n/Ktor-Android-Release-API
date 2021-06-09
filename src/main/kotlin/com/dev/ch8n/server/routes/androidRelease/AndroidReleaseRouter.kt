@@ -19,7 +19,7 @@ fun Route.androidReleaseRoutes(releaseRepository: AndroidReleaseRepository) {
 private inline fun Route.getRelease(releaseRepository: AndroidReleaseRepository) {
     get {
         val resultDeferred = GlobalScope.async {
-            releaseRepository.getAndroidLocalRelease()
+            releaseRepository.getAndroidLocalRelease("TODO fix")
         }
         val result = Result.build { resultDeferred.await() }
         when (result) {

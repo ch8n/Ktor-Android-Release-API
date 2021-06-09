@@ -1,6 +1,9 @@
 package com.dev.ch8n.server.routes.cron
 
 import com.dev.ch8n.server.data.repositories.AndroidReleaseRepository
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -18,6 +21,7 @@ private inline fun Route.cronAndroid(releaseRepository: AndroidReleaseRepository
             releaseRepository.getAndroidRemoteRelease()
         }
         val remoteAndroidRelease = remoteResult.await()
-        releaseRepository.saveAndroidRelease(remoteAndroidRelease)
+        val hashKey = releaseRepository.saveAndroidRelease(remoteAndroidRelease)
+        call.respondText(status = HttpStatusCode.OK, text = hashKey)
     }
 }
