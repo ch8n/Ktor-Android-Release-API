@@ -7,10 +7,10 @@ import org.kodein.db.impl.open
 import org.kodein.db.orm.kotlinx.KotlinxSerializer
 
 object DBConfig {
-    private const val DatabasePath = "./"
+    private const val DatabasePath = "./embeddedDB"
 
     val dbClient by lazy {
-        DBClient.open(DatabasePath, OpenPolicy.Create, KotlinxSerializer {
+        DBClient.open(DatabasePath, KotlinxSerializer {
             +AndroidRelease.serializer()
         })
     }

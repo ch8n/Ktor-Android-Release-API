@@ -17,9 +17,11 @@ fun Route.androidReleaseRoutes(releaseRepository: AndroidReleaseRepository) {
 }
 
 private inline fun Route.getRelease(releaseRepository: AndroidReleaseRepository) {
-    get {
+    get("/{hashKey}") {
+        val hashKeyParam = call.parameters.get("hashKey").toString()
         val resultDeferred = GlobalScope.async {
-            releaseRepository.getAndroidLocalRelease("TODO fix")
+
+            releaseRepository.getAndroidLocalRelease(hashKeyParam)
         }
         val result = Result.build { resultDeferred.await() }
         when (result) {
