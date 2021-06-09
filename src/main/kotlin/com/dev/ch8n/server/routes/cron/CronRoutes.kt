@@ -6,18 +6,18 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
 fun Route.getCronRoutes(releaseRepository: AndroidReleaseRepository) {
-    route("/cron"){
-        get("/android"){
-            val remoteResult = GlobalScope.async {
-                releaseRepository.getAndroidRemoteRelease()
-            }
-
-            val remoteAndroidRelease = remoteResult.await()
-
-            releaseRepository.saveAndroidRelease(remoteAndroidRelease)
-
-
-        }
+    route("/cron") {
+        cronAndroid(releaseRepository)
     }
 
+}
+
+private inline fun Route.cronAndroid(releaseRepository: AndroidReleaseRepository) {
+    get("/android") {
+        val remoteResult = GlobalScope.async {
+            releaseRepository.getAndroidRemoteRelease()
+        }
+        val remoteAndroidRelease = remoteResult.await()
+        releaseRepository.saveAndroidRelease(remoteAndroidRelease)
+    }
 }
