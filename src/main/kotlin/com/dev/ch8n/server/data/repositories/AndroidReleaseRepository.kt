@@ -20,4 +20,8 @@ class AndroidReleaseRepository(
     suspend fun getAndroidLocalRelease(): AndroidRelease? = withContext(Dispatchers.IO) {
         releaseLocalService.getAndroidRelease()
     }
+
+    suspend fun saveAndroidRelease(remoteAndroidRelease: AndroidRelease) = withContext(Dispatchers.IO){
+        releaseLocalService.saveAndroidRelease(remoteAndroidRelease)
+    }
 }
