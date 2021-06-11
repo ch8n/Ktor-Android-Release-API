@@ -10,6 +10,8 @@ import io.ktor.routing.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
+private const val GET_PARAM_ANDROID_HASHKEY = "hashKey"
+
 fun Route.androidReleaseRoutes(releaseRepository: AndroidReleaseRepository) {
     route("/android") {
         getRelease(releaseRepository)
@@ -17,25 +19,24 @@ fun Route.androidReleaseRoutes(releaseRepository: AndroidReleaseRepository) {
 }
 
 private inline fun Route.getRelease(releaseRepository: AndroidReleaseRepository) {
-    get("/{hashKey}") {
-        val hashKeyParam = call.parameters.get("hashKey").toString()
+    get("/$GET_PARAM_ANDROID_HASHKEY") {
+        val hashKeyParam = call.parameters.get(GET_PARAM_ANDROID_HASHKEY).toString()
         val resultDeferred = GlobalScope.async {
-            releaseRepository.getAndroidLocalRelease(hashKeyParam)
-        }
-        val result = Result.build { resultDeferred.await() }
-        when (result) {
-            is Result.Error -> {
-                println("============ call error =============")
-                call.respond(status = HttpStatusCode.InternalServerError) {
-                    result.error
-                }
+            runCatching {
+                releaseRepository.getAndroidLocalRelease(hashKeyParam)
             }
-            is Result.Success -> {
-                println("============ call success =============")
-                if (result.value != null) {
-                    call.respond(status = HttpStatusCode.OK, message = result.value)
-                } else {
-                    call.respond(status = HttpStatusCode.InternalServerError, message = "")
+        }
+
+        val result = resultDeferred.await()
+        val value = result.getOrNull()
+
+        when{
+            result.isSuccess && value!=null ->{
+                call.respond(status = HttpStatusCode.OK, message = value)
+            }
+            else ->{
+                call.respond(status = HttpStatusCode.InternalServerError) {
+                    result.exceptionOrNull()?.message ?: "Something went wrong"
                 }
             }
         }
