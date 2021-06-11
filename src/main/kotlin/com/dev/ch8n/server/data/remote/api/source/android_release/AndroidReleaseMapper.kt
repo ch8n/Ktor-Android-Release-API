@@ -14,7 +14,7 @@ fun AndroidReleaseDto.toAndroidRelease(): AndroidRelease {
             updatedAt = entry.updated ?: "",
         )
     }
-    return AndroidRelease(releaseNotes)
+    return AndroidRelease(UUID.randomUUID().toString(), releaseNotes)
 }
 
 private inline fun Entry.getReleaseItems(): List<ReleaseItem> {

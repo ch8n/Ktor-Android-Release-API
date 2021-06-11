@@ -29,6 +29,13 @@ dependencies {
     // xml mapper
     implementation("org.json:json:20190722")
 
+    // embedded database
+    implementation("org.kodein.db:kodein-db-jvm:0.8.1-beta")
+    implementation("org.kodein.db:kodein-db-serializer-kotlinx:0.8.1-beta")
+    // update dependencies -linux, -macos or -windows
+    implementation("org.kodein.db:kodein-leveldb-jni-jvm-macos:0.8.1-beta")
+
+
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
 }
 

@@ -11,23 +11,23 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.json.XML
 
-interface AndroidReleaseService {
+interface AndroidReleaseRemoteService {
     suspend fun getAndroidReleaseRss(): String
     suspend fun getAndroidRelease(): AndroidReleaseDto
 }
 
 // instant test
 fun main() {
-    val rss = AndroidReleaseSource(ApiConfig.httpClient)
+    val rss = AndroidReleaseRemoteSource(ApiConfig.httpClient)
     runBlocking {
         val result = rss.getAndroidRelease().toAndroidRelease()
         println(result)
     }
 }
 
-class AndroidReleaseSource(
+class AndroidReleaseRemoteSource(
     private val httpClient: HttpClient
-) : AndroidReleaseService {
+) : AndroidReleaseRemoteService {
 
     override suspend fun getAndroidReleaseRss(): String {
         val response = httpClient.use { client ->

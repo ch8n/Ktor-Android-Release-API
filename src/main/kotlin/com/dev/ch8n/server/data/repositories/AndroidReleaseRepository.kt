@@ -1,17 +1,27 @@
 package com.dev.ch8n.server.data.repositories
 
+import com.dev.ch8n.server.data.local.database.sources.AndroidReleaseLocalService
 import com.dev.ch8n.server.data.models.AndroidRelease
-import com.dev.ch8n.server.data.remote.api.source.android_release.AndroidReleaseService
+import com.dev.ch8n.server.data.remote.api.source.android_release.AndroidReleaseRemoteService
 import com.dev.ch8n.server.data.remote.api.source.android_release.toAndroidRelease
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class AndroidReleaseRepository(
-    private val releaseService: AndroidReleaseService
-) {
-    suspend fun getAndroidRelease(): AndroidRelease = withContext(Dispatchers.IO) {
-        val releaseDto = releaseService.getAndroidRelease()
+    private val releaseRemoteService: AndroidReleaseRemoteService,
+    private val releaseLocalService: AndroidReleaseLocalService,
+
+    ) {
+    suspend fun getAndroidRemoteRelease(): AndroidRelease = withContext(Dispatchers.IO) {
+        val releaseDto = releaseRemoteService.getAndroidRelease()
         releaseDto.toAndroidRelease()
-        throw IllegalAccessError("pagal pn")
+    }
+
+    suspend fun getAndroidLocalRelease(keyHash: String): AndroidRelease? = withContext(Dispatchers.IO) {
+        releaseLocalService.getAndroidRelease(keyHash)
+    }
+
+    suspend fun saveAndroidRelease(remoteAndroidRelease: AndroidRelease): String = withContext(Dispatchers.IO) {
+        releaseLocalService.saveAndroidRelease(remoteAndroidRelease)
     }
 }
