@@ -2,6 +2,7 @@ package com.dev.ch8n.server.routes.androidRelease
 
 
 import com.dev.ch8n.server.data.repositories.AndroidReleaseRepository
+import com.dev.ch8n.server.services.databaseIndex.ReleaseIndex
 import com.dev.ch8n.server.utils.Result
 import io.ktor.application.*
 import io.ktor.http.*
@@ -17,8 +18,8 @@ fun Route.androidReleaseRoutes(releaseRepository: AndroidReleaseRepository) {
 }
 
 private inline fun Route.getRelease(releaseRepository: AndroidReleaseRepository) {
-    get("/{hashKey}") {
-        val hashKeyParam = call.parameters.get("hashKey").toString()
+    get {
+        val hashKeyParam = ReleaseIndex.androidReleaseKey
         val resultDeferred = GlobalScope.async {
             releaseRepository.getAndroidLocalRelease(hashKeyParam)
         }

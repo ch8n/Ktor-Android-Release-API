@@ -4,4 +4,5 @@ import io.ktor.application.*
 
 fun Application.registerMiddleware() {
     acceptJson()
+    cronObservers()
 }

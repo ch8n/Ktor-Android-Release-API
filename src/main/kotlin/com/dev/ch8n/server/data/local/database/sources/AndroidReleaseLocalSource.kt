@@ -2,6 +2,8 @@ package com.dev.ch8n.server.data.local.database.sources
 
 import com.dev.ch8n.server.data.models.AndroidRelease
 import org.kodein.db.DB
+import org.kodein.db.delete
+import org.kodein.db.find
 
 
 typealias DBClient = DB
@@ -22,6 +24,11 @@ class AndroidReleaseLocalSource(
     }
 
     override suspend fun saveAndroidRelease(remoteAndroidRelease: AndroidRelease): String {
+        val cursor = dbClient.find<AndroidRelease>().all()
+        val key= cursor.use {
+            it.key()
+        }
+        dbClient.delete(key)
         return dbClient.put(remoteAndroidRelease).toBase64()
     }
 }
