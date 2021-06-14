@@ -1,9 +1,11 @@
 package com.dev.ch8n.server.data.models
 
 import kotlinx.serialization.Serializable
+import org.kodein.db.model.Id
 
 @Serializable
 data class AndroidRelease(
+    @Id val uid: String,
     val releaseNotes: List<ReleaseNote>
 )
 
