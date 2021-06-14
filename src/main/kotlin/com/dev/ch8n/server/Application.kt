@@ -14,5 +14,11 @@ fun Application.module() {
     registerRouters()
 }
 
+object AppConfig
+{
+    val isDebug=true
+    val CRON_REFRESH_TIME=if(isDebug) 60*1000L else 24*3600*1000L
+}
+
 
 
