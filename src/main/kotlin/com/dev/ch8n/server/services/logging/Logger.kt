@@ -44,6 +44,8 @@ class Logger private constructor(val tagName: String) : Log {
     companion object {
         fun newInstance(tag: String): Log = Logger(tag)
         fun newInstance(className: KClass<*>): Log = Logger(className.simpleName.toString())
+        private val _instance = Logger("Logger")
+        val instance get() = _instance
     }
 
     private val LogFilesLimit = 10
@@ -62,6 +64,19 @@ class Logger private constructor(val tagName: String) : Log {
         }
     }
 
+    fun limitLogFiles() {
+        val logFolder = File(logFolderName)
+        val logfiles = logFolder.walk().filter { it.isFile && it.name.contains(".txt") }.toList()
+        val isCleanupRequired = logfiles.size > LogFilesLimit
+        if (isCleanupRequired) {
+            val sorted = logfiles.sortedByDescending { it.nameWithoutExtension.toLocalDate() }
+            sorted.forEachIndexed { index, file ->
+                if (index >= LogFilesLimit) {
+                    file.delete()
+                }
+            }
+        }
+    }
 
     override fun d(message: String) {
         configureLog()
@@ -77,19 +92,7 @@ class Logger private constructor(val tagName: String) : Log {
         logFile?.appendText("\n${Clock.System.now()} : Error : $traceBuilder")
     }
 
-    fun limitLogFiles() {
-        val logFolder = File(logFolderName)
-        val logfiles = logFolder.walk().filter { it.isFile && it.name.contains(".txt") }.toList()
-        val isCleanupRequired = logfiles.size > LogFilesLimit
-        if (isCleanupRequired) {
-            val sorted = logfiles.sortedByDescending { it.nameWithoutExtension.toLocalDate() }
-            sorted.forEachIndexed { index, file ->
-                if (index >= LogFilesLimit) {
-                    file.delete()
-                }
-            }
-        }
-    }
+
 
     private fun date(): String {
         val currentMoment: Instant = Clock.System.now()
@@ -101,7 +104,7 @@ class Logger private constructor(val tagName: String) : Log {
 
 }
 
-fun File.createDirectory() {
+private inline fun File.createDirectory() {
     if (!this.exists()) {
         this.mkdir()
     }

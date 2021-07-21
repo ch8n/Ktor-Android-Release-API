@@ -25,10 +25,10 @@ object CronService : CoroutineScope {
         }
     }
 
-    fun observeLogCleanCron(logger: Logger) = launch {
+    fun observeLogCleanCron() = launch {
         onceDayTrigger.collect { cronTime ->
             log.d("limiting logs from cron $cronTime")
-            logger.limitLogFiles()
+            Logger.instance.limitLogFiles()
             log.d("limiting logs Complete")
         }
     }

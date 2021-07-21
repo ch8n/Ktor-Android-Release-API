@@ -7,8 +7,6 @@ import io.ktor.application.*
 
 fun Application.cronObservers() {
     val repository = Injector.androidReleaseRepository
-    val logger = Logger
-
     CronService.observeAndroidReleaseCron(repository)
-    CronService.observeLogCleanCron(logger)
+    CronService.observeLogCleanCron()
 }

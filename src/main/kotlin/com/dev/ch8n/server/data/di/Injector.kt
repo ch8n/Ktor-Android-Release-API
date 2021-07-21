@@ -15,6 +15,11 @@ object Injector {
     private val dbClient by lazy { DBConfig.dbClient }
     private val androidReleaseRemoteService: AndroidReleaseRemoteService by lazy { AndroidReleaseRemoteSource(httpClient) }
     private val androidReleaseLocalService: AndroidReleaseLocalService by lazy { AndroidReleaseLocalSource(dbClient) }
-    private val androidReleaseRepository by lazy { AndroidReleaseRepository(androidReleaseRemoteService, androidReleaseLocalService) }
-    val androidReleaseCollection  by lazy { AndroidReleaseController(androidReleaseRepository) }
+    val androidReleaseRepository by lazy {
+        AndroidReleaseRepository(
+            androidReleaseRemoteService,
+            androidReleaseLocalService
+        )
+    }
+    val androidReleaseCollection by lazy { AndroidReleaseController(androidReleaseRepository) }
 }
