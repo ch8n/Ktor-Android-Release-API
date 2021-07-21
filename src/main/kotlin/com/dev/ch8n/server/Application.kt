@@ -5,6 +5,7 @@ import com.dev.ch8n.server.routes.registerRouters
 import io.ktor.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import java.io.File
 
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
@@ -14,10 +15,10 @@ fun Application.module() {
     registerRouters()
 }
 
-object AppConfig
-{
-    val isDebug=true
-    val CRON_REFRESH_TIME=if(isDebug) 60*1000L else 24*3600*1000L
+object AppConfig {
+    val isDebug = true
+    val CRON_REFRESH_TIME = if (isDebug) 60 * 1000L else 24 * 3600 * 1000L
+    val PROJECT_ROOT = "src.main.kotlin.com.dev.ch8n.server".replace(".", File.separator)
 }
 
 

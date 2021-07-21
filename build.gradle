@@ -35,6 +35,7 @@ dependencies {
     // update dependencies -linux, -macos or -windows
     implementation("org.kodein.db:kodein-leveldb-jni-jvm-macos:0.8.1-beta")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
 
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
 }

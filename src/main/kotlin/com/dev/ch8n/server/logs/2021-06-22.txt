@@ -1,0 +1,20 @@
+
+2021-07-21T07:14:22.565084Z : hello world!
+2021-07-21T07:14:22.575100Z : hello ch8n!
+2021-07-21T07:14:22.575207Z : hello logger!
+2021-07-21T07:15:50.091088Z : Debug : hello world!
+2021-07-21T07:15:50.100978Z : Debug : hello ch8n!
+2021-07-21T07:15:50.101190Z : Debug : hello logger!
+2021-07-21T07:15:50.101357Z : Error : Hello errorish world!
+2021-07-21T07:15:50.101543Z : Error : [Ljava.lang.StackTraceElement;@239963d8
+2021-07-21T07:17:32.120146Z : Debug : hello world!
+2021-07-21T07:17:32.132567Z : Debug : hello ch8n!
+2021-07-21T07:17:32.132764Z : Debug : hello logger!
+2021-07-21T07:17:32.132891Z : Error : Hello errorish world!
+2021-07-21T07:17:32.133091Z : Error : com.dev.ch8n.server.services.logging.LoggerKt.main(Logger.kt:13)com.dev.ch8n.server.services.logging.LoggerKt.main(Logger.kt)
+2021-07-21T07:18:15.434962Z : Debug : hello world!
+2021-07-21T07:18:15.446634Z : Debug : hello ch8n!
+2021-07-21T07:18:15.446798Z : Debug : hello logger!
+2021-07-21T07:18:15.446932Z : Error : Hello errorish world!
+2021-07-21T07:18:15.447176Z : Error : com.dev.ch8n.server.services.logging.LoggerKt.main(Logger.kt:13)
+com.dev.ch8n.server.services.logging.LoggerKt.main(Logger.kt)

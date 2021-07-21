@@ -1,7 +1,7 @@
 package com.dev.ch8n.server.routes.androidRelease
 
 
-import com.dev.ch8n.server.data.repositories.AndroidReleaseRepository
+import com.dev.ch8n.server.data.repositories.AndroidReleaseController
 import com.dev.ch8n.server.services.databaseIndex.ReleaseIndex
 import com.dev.ch8n.server.utils.Result
 import io.ktor.application.*
@@ -11,33 +11,22 @@ import io.ktor.routing.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
-fun Route.androidReleaseRoutes(releaseRepository: AndroidReleaseRepository) {
+fun Route.androidReleaseRoutes(controller: AndroidReleaseController) {
     route("/android") {
-        getRelease(releaseRepository)
+        getRelease(controller)
     }
 }
 
-private inline fun Route.getRelease(releaseRepository: AndroidReleaseRepository) {
+private inline fun Route.getRelease(controller: AndroidReleaseController) {
     get {
-        val hashKeyParam = ReleaseIndex.androidReleaseKey
-        val resultDeferred = GlobalScope.async {
-            releaseRepository.getAndroidLocalRelease(hashKeyParam)
-        }
-        val result = Result.build { resultDeferred.await() }
+        val hashKey = ReleaseIndex.androidReleaseKey
+        val result = controller.getAndroidLocalRelease(hashKey)
         when (result) {
             is Result.Error -> {
-                println("============ call error =============")
-                call.respond(status = HttpStatusCode.InternalServerError) {
-                    result.error
-                }
+                call.respond(status = HttpStatusCode.InternalServerError) { result.error }
             }
             is Result.Success -> {
-                println("============ call success =============")
-                if (result.value != null) {
-                    call.respond(status = HttpStatusCode.OK, message = result.value)
-                } else {
-                    call.respond(status = HttpStatusCode.InternalServerError, message = "")
-                }
+                call.respond(status = HttpStatusCode.OK, message = result.value)
             }
         }
     }

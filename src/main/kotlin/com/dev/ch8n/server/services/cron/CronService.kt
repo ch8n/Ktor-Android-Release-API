@@ -3,33 +3,46 @@ package com.dev.ch8n.server.services.cron
 import com.dev.ch8n.server.AppConfig
 import com.dev.ch8n.server.data.repositories.AndroidReleaseRepository
 import com.dev.ch8n.server.services.databaseIndex.ReleaseIndex
+import com.dev.ch8n.server.services.logging.Log
+import com.dev.ch8n.server.services.logging.Logger
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.datetime.Clock
+import org.kodein.log.toLocalString
+import kotlin.coroutines.CoroutineContext
 
-object CronService {
+object CronService : CoroutineScope {
 
-    private val refreshAndroidReleaseCron = flow {
+    private val log: Log = Logger.newInstance(this::class)
+
+    private val onceDayTrigger = flow {
         while (true) {
             delay(AppConfig.CRON_REFRESH_TIME)
-            emit(true)
+            val cronTime = Clock.System.now().toLocalString()
+            log.d("Refresh Cron emitted $cronTime")
+            emit(cronTime)
         }
     }
 
-    fun observeAndroidReleaseCron(releaseRepository: AndroidReleaseRepository) {
-        GlobalScope.launch(Dispatchers.IO) {
-            refreshAndroidReleaseCron.collect { refreshAndroidRelease ->
-                if (refreshAndroidRelease) {
-                    println("Cron job executed: observeAndroidReleaseCron")
-                    val remoteResult = GlobalScope.async {
-                        releaseRepository.getAndroidRemoteRelease()
-                    }
-                    val remoteAndroidRelease = remoteResult.await()
-                    ReleaseIndex.androidReleaseKey = releaseRepository.saveAndroidRelease(remoteAndroidRelease)
-                    println("Cron job completed: ${ReleaseIndex.androidReleaseKey}")
-                }
-
-            }
+    fun observeLogCleanCron(logger: Logger) = launch {
+        onceDayTrigger.collect { cronTime ->
+            log.d("limiting logs from cron $cronTime")
+            logger.limitLogFiles()
+            log.d("limiting logs Complete")
         }
     }
+
+
+    fun observeAndroidReleaseCron(releaseRepository: AndroidReleaseRepository) = launch {
+        onceDayTrigger.collect { cronTime ->
+            log.d("Refreshing Android-Release-Data from cron $cronTime")
+            val remoteResult = withContext(Dispatchers.IO) { releaseRepository.getAndroidRemoteRelease() }
+            ReleaseIndex.androidReleaseKey = releaseRepository.saveAndroidRelease(remoteResult)
+            log.d("Refreshing Complete Android-Release-Data from cron ${ReleaseIndex.androidReleaseKey}")
+        }
+    }
+
+    override val coroutineContext: CoroutineContext
+        get() = Job() + Dispatchers.IO + CoroutineExceptionHandler { _, throwable -> log.e(throwable) }
 }
