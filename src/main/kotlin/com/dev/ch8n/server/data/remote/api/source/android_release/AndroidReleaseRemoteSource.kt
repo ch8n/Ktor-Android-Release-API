@@ -3,6 +3,7 @@ package com.dev.ch8n.server.data.remote.api.source.android_release
 import com.dev.ch8n.server.data.remote.api.config.ApiConfig
 import com.dev.ch8n.server.data.remote.api.config.ApiConfig.Url
 import io.ktor.client.*
+import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -18,19 +19,22 @@ interface AndroidReleaseRemoteService {
 
 // instant test
 fun main() {
-    val rss = AndroidReleaseRemoteSource(ApiConfig.httpClient)
     runBlocking {
-        val result = rss.getAndroidRelease().toAndroidRelease()
+        val rss = AndroidReleaseRemoteSource(ApiConfig)
+        val result = rss.getAndroidReleaseRss()
         println(result)
+
+        val result2 = rss.getAndroidReleaseRss()
+        println(result2)
     }
 }
 
 class AndroidReleaseRemoteSource(
-    private val httpClient: HttpClient
+    private val apiConfig: ApiConfig
 ) : AndroidReleaseRemoteService {
 
     override suspend fun getAndroidReleaseRss(): String {
-        val response = httpClient.use { client ->
+        val response = apiConfig.httpClient.use { client ->
             println("============ api called =============")
             client.request<HttpResponse>(Url.GET_ANDROID_RELEASE_RSS) {
                 method = HttpMethod.Get
@@ -61,8 +65,10 @@ class AndroidReleaseRemoteSource(
             val contentXml = it.content?.cdata ?: ""
             val contentJson = XML.toJSONObject(contentXml).toString()
             //todo fix type api different types
-            val releaseContentDtoV1 = kotlin.runCatching { Json.decodeFromString<ReleaseContentDto>(contentJson) }.getOrNull()
-            val releaseContentDtoV2 = kotlin.runCatching { Json.decodeFromString<ReleaseContentDtoV2>(contentJson) }.getOrNull()
+            val releaseContentDtoV1 =
+                kotlin.runCatching { Json.decodeFromString<ReleaseContentDto>(contentJson) }.getOrNull()
+            val releaseContentDtoV2 =
+                kotlin.runCatching { Json.decodeFromString<ReleaseContentDtoV2>(contentJson) }.getOrNull()
             it.content?.contentV1 = releaseContentDtoV1
             it.content?.contentV2 = releaseContentDtoV2
         }

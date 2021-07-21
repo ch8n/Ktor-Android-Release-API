@@ -1,5 +1,5 @@
 ### open in vscode + httpClient plugin
 
-GET http://127.0.0.1:8080/cron/android
+GET http://0.0.0.0:3000/cron/android
 Accept: application/json
 

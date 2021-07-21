@@ -7,12 +7,11 @@ import io.ktor.client.features.logging.*
 
 object ApiConfig {
 
-    val httpClient by lazy {
-        HttpClient(CIO) {
+    val httpClient: HttpClient
+        get() = HttpClient(CIO) {
             configHttpLogging()
             configEngine()
         }
-    }
 
     object Url {
         const val GET_ANDROID_RELEASE_RSS = "https://developer.android.com/feeds/androidx-release-notes.xml"
@@ -22,7 +21,7 @@ object ApiConfig {
 private inline fun HttpClientConfig<CIOEngineConfig>.configHttpLogging() {
     install(Logging) {
         logger = Logger.DEFAULT
-        level = LogLevel.BODY
+        level = LogLevel.HEADERS
     }
 }
 

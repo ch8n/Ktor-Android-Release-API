@@ -1,6 +1,6 @@
 package com.dev.ch8n.server.routes.cron
 
-import com.dev.ch8n.server.data.repositories.AndroidReleaseController
+import com.dev.ch8n.server.controller.AndroidReleaseController
 import com.dev.ch8n.server.services.databaseIndex.ReleaseIndex
 import com.dev.ch8n.server.services.logging.Log
 import com.dev.ch8n.server.services.logging.Logger
@@ -26,15 +26,15 @@ private inline fun Route.cronAndroid(controller: AndroidReleaseController, log: 
         when (keyResult) {
             is Result.Error -> {
                 log.e(keyResult.error)
-                val response = NetworkResponse<Unit>(
+                val response = NetworkResponse<String>(
                     error = Messages.Failure.SOMETHING_WENT_WRONG,
-                    data = Unit
+                    data = ""
                 )
                 call.respond(status = HttpStatusCode.InternalServerError) { response }
             }
             is Result.Success -> {
                 ReleaseIndex.androidReleaseKey = keyResult.value
-                val response = NetworkResponse(
+                val response = NetworkResponse<String>(
                     data = keyResult.value
                 )
                 call.respond(status = HttpStatusCode.OK) { response }

@@ -1,7 +1,8 @@
 package com.dev.ch8n.server.routes.androidRelease
 
 
-import com.dev.ch8n.server.data.repositories.AndroidReleaseController
+
+import com.dev.ch8n.server.controller.AndroidReleaseController
 import com.dev.ch8n.server.services.databaseIndex.ReleaseIndex
 import com.dev.ch8n.server.services.logging.Log
 import com.dev.ch8n.server.services.logging.Logger

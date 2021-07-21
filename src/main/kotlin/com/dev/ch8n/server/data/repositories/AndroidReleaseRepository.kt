@@ -28,25 +28,3 @@ class AndroidReleaseRepository(
     }
 }
 
-class AndroidReleaseController(
-    private val repository: AndroidReleaseRepository
-) : CoroutineScope {
-
-    private val log: Log = Logger.newInstance(this::class)
-
-    override val coroutineContext: CoroutineContext
-        get() = Job() + Dispatchers.IO + CoroutineExceptionHandler { _, throwable -> log.e(throwable) }
-
-    suspend fun getAndroidRemoteRelease(): Result<String, Exception> {
-        return Result.build {
-            val remoteAndroidRelease = repository.getAndroidRemoteRelease()
-            val hashKey = repository.saveAndroidRelease(remoteAndroidRelease)
-            hashKey
-        }
-    }
-
-    suspend fun getAndroidLocalRelease(keyHash: String): Result<AndroidRelease, Exception> {
-        return  Result.build { repository.getAndroidLocalRelease(keyHash)?: throw NullPointerException() }
-    }
-
-}
